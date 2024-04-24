@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from './prisma.service';
 
+const mockPrismaService = {
+  onModuleInit: jest.fn(),
+};
+
 describe('PrismaService', () => {
   let service: PrismaService;
 
@@ -14,5 +18,10 @@ describe('PrismaService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('should be connected', async () => {
+    mockPrismaService.onModuleInit.mockResolvedValueOnce;
+    await expect(service.onModuleInit).toHaveReturned();
   });
 });

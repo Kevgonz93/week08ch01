@@ -14,11 +14,6 @@ import { PetsService } from './pets.service';
 export class PetsController {
   constructor(private readonly petsService: PetsService) {}
 
-  @Post()
-  create(@Body() createPetDto: CreatePetDto) {
-    return this.petsService.create(createPetDto);
-  }
-
   @Get()
   findAll() {
     return this.petsService.findAll();
@@ -27,6 +22,11 @@ export class PetsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.petsService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() createPetDto: CreatePetDto) {
+    return this.petsService.create(createPetDto);
   }
 
   @Patch(':id')

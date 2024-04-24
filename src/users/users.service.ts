@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -19,6 +19,15 @@ export class UsersService {
     return data;
   }
 
+  async create(data: CreateUserDto) {
+    try {
+      const newUser = this.prismaService.user.create({ data });
+      return newUser;
+    } catch (error) {
+      throw new NotFoundException(`Data invalid`);
+    }
+  }
+
   async update(id: string, data: UpdateUserDto) {
     try {
       const userUpdate = this.prismaService.user.update({
@@ -30,14 +39,7 @@ export class UsersService {
       throw new NotFoundException(`User ${id} not found`);
     }
   }
-  async create(data: CreateUserDto) {
-    try {
-      const newUser = this.prismaService.user.create({ data });
-      return newUser;
-    } catch (error) {
-      throw new NotFoundException(`Data invalid`);
-    }
-  }
+
   async delete(id: string) {
     try {
       const user = await this.prismaService.user.delete({

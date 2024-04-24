@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePetDto, UpdatePetDto } from './entities/pet.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PetsService {
@@ -17,6 +17,14 @@ export class PetsService {
     }
     return await data;
   }
+
+  async create(data: CreatePetDto) {
+    if (typeof data.age !== 'number') {
+      throw new NotFoundException('Data invalid');
+    }
+    return this.prismaService.pet.create({ data: { age: data.age, ...data } });
+  }
+
   async update(id: string, data: UpdatePetDto) {
     try {
       const userUpdate = this.prismaService.user.update({
@@ -27,12 +35,6 @@ export class PetsService {
     } catch (error) {
       throw new NotFoundException(`User ${id} not found`);
     }
-  }
-  async create(data: CreatePetDto) {
-    if (typeof data.age !== 'number') {
-      throw new Error('Age must be a number');
-    }
-    return this.prismaService.pet.create({ data: { age: data.age, ...data } });
   }
 
   async delete(id: string) {
